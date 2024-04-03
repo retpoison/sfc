@@ -1,0 +1,13 @@
+sfc
+===
+simple/stupid factorial calculator library(?).
+
+
+Run
+---
+there is an example in main.c.
+run
+  git clone https://github.com/retpoison/sfc.git
+  cd sfc/
+  gcc main.c sfc.c
+  ./a.out
