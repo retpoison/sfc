@@ -13,28 +13,9 @@ int factorial(Number * num, int f)
 {
 	Number *a = new_number();
 	Number *c = (Number *) xmalloc(sizeof(Number));
-	short cind, carry, n, i, j, k;
 
 	for (int _ = 0; _ < f; _++) {
-		cind = 0;
-		carry = 0;
-		c->len = a->len + num->len;
-		c->num = (char *)xmalloc(c->len * (sizeof(char)));
-		fill_zero(c);
-		for (i = 0; i < a->len; i++) {
-			for (j = 0; j < num->len; j++) {
-				n = a->num[i] * num->num[j] + c->num[j + cind]
-				    + carry;
-				c->num[j + cind] = n % 10;
-				carry = (int)(n / 10);
-			}
-			for (k = j + cind; carry != 0; k++) {
-				n = c->num[k] + carry;
-				c->num[k] = n % 10;
-				carry = (short)(n / 10);
-			}
-			cind++;
-		}
+		multiply(a, num, c);
 		num->len = c->len;
 		if (c->num[c->len - 1] == 0)
 			num->len--;
@@ -47,6 +28,31 @@ int factorial(Number * num, int f)
 	free(a);
 	free(c);
 	return 0;
+}
+
+void multiply(Number * a, Number * b, Number * out)
+{
+	int cind, carry, n, i, j, k;
+	cind = 0;
+	carry = 0;
+	out->len = a->len + b->len;
+	out->num = (char *)xmalloc(out->len * (sizeof(char)));
+	fill_zero(out);
+
+	for (i = 0; i < a->len; i++) {
+		for (j = 0; j < b->len; j++) {
+			n = a->num[i] * b->num[j] + out->num[j + cind]
+			    + carry;
+			out->num[j + cind] = n % 10;
+			carry = (int)(n / 10);
+		}
+		for (k = j + cind; carry != 0; k++) {
+			n = out->num[k] + carry;
+			out->num[k] = n % 10;
+			carry = (short)(n / 10);
+		}
+		cind++;
+	}
 }
 
 void plus_one(Number * num)

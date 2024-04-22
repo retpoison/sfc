@@ -14,6 +14,7 @@ typedef struct {
 Number *new_number();
 int calculate(Number * num, int f);
 int factorial(Number * num, int f);
+void multiply(Number * a, Number * b, Number * out);
 void plus_one(Number * num);
 void fill_zero(Number * num);
 void print(Number * num);
