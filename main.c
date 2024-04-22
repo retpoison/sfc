@@ -4,9 +4,9 @@
 
 int main()
 {
-	Number *f = new_number();
-	factorial(f, 10);
-	print(f);
-	cleanup(f);
+	Number *f = sf_new_number();
+	sf_factorial(f, 10);
+	sf_print(f);
+	sf_cleanup(f);
 	return 0;
 }

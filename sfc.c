@@ -1,27 +1,27 @@
 #include "sfc.h"
 
-Number *new_number()
+Number *sf_new_number()
 {
-	Number *n = (Number *) xmalloc(sizeof(Number));
+	Number *n = (Number *) sl_xmalloc(sizeof(Number));
 	n->len = 1;
-	n->num = (uint8 *) xmalloc(n->len * (sizeof(uint8)));
+	n->num = (uint8 *) sl_xmalloc(n->len * (sizeof(uint8)));
 	n->num[0] = 1;
 	return n;
 }
 
-int factorial(Number * num, int f)
+int sf_factorial(Number * num, int f)
 {
-	Number *a = new_number();
-	Number *c = (Number *) xmalloc(sizeof(Number));
+	Number *a = sf_new_number();
+	Number *c = (Number *) sl_xmalloc(sizeof(Number));
 
 	for (int _ = 0; _ < f; _++) {
-		multiply(a, num, c);
+		sf_multiply(a, num, c);
 		num->len = c->len;
 		if (c->num[c->len - 1] == 0)
 			num->len--;
 		free(num->num);
 		num->num = c->num;
-		plus_one(a);
+		sf_plus_one(a);
 	}
 
 	free(a->num);
@@ -30,15 +30,15 @@ int factorial(Number * num, int f)
 	return 0;
 }
 
-void multiply(Number * a, Number * b, Number * out)
+void sf_multiply(Number * a, Number * b, Number * out)
 {
 	int i, j;
 	uint8 cind, carry, n, k;
 	cind = 0;
 	carry = 0;
 	out->len = a->len + b->len;
-	out->num = (uint8 *) xmalloc(out->len * (sizeof(uint8)));
-	fill_zero(out);
+	out->num = (uint8 *) sl_xmalloc(out->len * (sizeof(uint8)));
+	sf_fill_zero(out);
 
 	for (i = 0; i < a->len; i++) {
 		for (j = 0; j < b->len; j++) {
@@ -56,7 +56,7 @@ void multiply(Number * a, Number * b, Number * out)
 	}
 }
 
-void plus_one(Number * num)
+void sf_plus_one(Number * num)
 {
 	uint8 carry = 0, n;
 	int ind = 0;
@@ -71,21 +71,21 @@ void plus_one(Number * num)
 	if (ind == num->len && carry != 0) {
 		num->len++;
 		num->num =
-		    (uint8 *) xrealloc(num->num, (num->len) * sizeof(uint8));
+		    (uint8 *) sl_xrealloc(num->num, (num->len) * sizeof(uint8));
 		if (num->num == NULL)
 			return;
 		num->num[num->len - 1] = carry;
 	}
 }
 
-void fill_zero(Number * num)
+void sf_fill_zero(Number * num)
 {
 	int i;
 	for (i = 0; i < num->len; i++)
 		num->num[i] = 0;
 }
 
-void print(Number * num)
+void sf_print(Number * num)
 {
 	int i = num->len - 1;
 	if (num->num[i] == 0)
@@ -97,7 +97,7 @@ void print(Number * num)
 	printf("\n");
 }
 
-void cleanup(Number * num)
+void sf_cleanup(Number * num)
 {
 	free(num->num);
 	free(num);
@@ -107,23 +107,23 @@ void cleanup(Number * num)
  * from https://git.suckless.org/st/file/st.c.html
  * with a few changes.
  */
-void die(const char *errstr, ...)
+void sl_die(const char *errstr, ...)
 {
 	fprintf(stderr, "%s", errstr);
 	exit(1);
 }
 
-void *xmalloc(size_t len)
+void *sl_xmalloc(size_t len)
 {
 	void *p;
 	if ((p = malloc(len)) == NULL)
-		die("malloc: %s\n", strerror(errno));
+		sl_die("malloc: %s\n", strerror(errno));
 	return p;
 }
 
-void *xrealloc(void *p, size_t len)
+void *sl_xrealloc(void *p, size_t len)
 {
 	if ((p = realloc(p, len)) == NULL)
-		die("realloc: %s\n", strerror(errno));
+		sl_die("realloc: %s\n", strerror(errno));
 	return p;
 }
