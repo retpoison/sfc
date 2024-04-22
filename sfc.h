@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #ifndef __SFC__
 #define __SFC__
 
+typedef uint8_t uint8;
 typedef struct {
 	int len;
-	char *num;
+	uint8 *num;
 } Number;
 
 Number *new_number();

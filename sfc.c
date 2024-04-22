@@ -4,7 +4,7 @@ Number *new_number()
 {
 	Number *n = (Number *) xmalloc(sizeof(Number));
 	n->len = 1;
-	n->num = (char *)xmalloc(n->len * (sizeof(char)));
+	n->num = (uint8 *) xmalloc(n->len * (sizeof(uint8)));
 	n->num[0] = 1;
 	return n;
 }
@@ -32,11 +32,12 @@ int factorial(Number * num, int f)
 
 void multiply(Number * a, Number * b, Number * out)
 {
-	int cind, carry, n, i, j, k;
+	int i, j;
+	uint8 cind, carry, n, k;
 	cind = 0;
 	carry = 0;
 	out->len = a->len + b->len;
-	out->num = (char *)xmalloc(out->len * (sizeof(char)));
+	out->num = (uint8 *) xmalloc(out->len * (sizeof(uint8)));
 	fill_zero(out);
 
 	for (i = 0; i < a->len; i++) {
@@ -49,7 +50,7 @@ void multiply(Number * a, Number * b, Number * out)
 		for (k = j + cind; carry != 0; k++) {
 			n = out->num[k] + carry;
 			out->num[k] = n % 10;
-			carry = (short)(n / 10);
+			carry = (uint8) (n / 10);
 		}
 		cind++;
 	}
@@ -57,7 +58,7 @@ void multiply(Number * a, Number * b, Number * out)
 
 void plus_one(Number * num)
 {
-	char carry = 0, n;
+	uint8 carry = 0, n;
 	int ind = 0;
 	do {
 		n = num->num[ind] + 1;
@@ -70,7 +71,7 @@ void plus_one(Number * num)
 	if (ind == num->len && carry != 0) {
 		num->len++;
 		num->num =
-		    (char *)xrealloc(num->num, (num->len) * sizeof(char));
+		    (uint8 *) xrealloc(num->num, (num->len) * sizeof(uint8));
 		if (num->num == NULL)
 			return;
 		num->num[num->len - 1] = carry;
@@ -79,7 +80,8 @@ void plus_one(Number * num)
 
 void fill_zero(Number * num)
 {
-	for (int i = 0; i < num->len; i++)
+	int i;
+	for (i = 0; i < num->len; i++)
 		num->num[i] = 0;
 }
 
