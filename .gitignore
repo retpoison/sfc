@@ -53,3 +53,6 @@ dkms.conf
 
 # indent backup file
 *~
+
+# vim swap
+*.swp
