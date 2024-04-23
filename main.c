@@ -8,5 +8,17 @@ int main()
 	sf_factorial(f, 10);
 	sf_print(f);
 	sf_cleanup(f);
+
+	Number *a = sf_new_number();
+	sf_set_number(a, "125");
+	Number *b = sf_new_number();
+	sf_set_number(b, "951");
+	Number *c = sf_new_number();
+	sf_multiply(a, b, c);
+
+	sf_print(c);
+	sf_cleanup(a);
+	sf_cleanup(b);
+	sf_cleanup(c);
 	return 0;
 }
