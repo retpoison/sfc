@@ -3,16 +3,15 @@
 Number *sf_new_number()
 {
 	Number *n = (Number *) sl_xmalloc(sizeof(Number));
-	n->len = 1;
-	n->num = (uint8 *) sl_xmalloc(n->len * (sizeof(uint8)));
-	n->num[0] = 1;
+	n->num = NULL;
+	sf_set_number(n, "1");
 	return n;
 }
 
 int sf_factorial(Number * num, int f)
 {
 	Number *a = sf_new_number();
-	Number *c = (Number *) sl_xmalloc(sizeof(Number));
+	Number *c = sf_new_number();
 
 	for (int _ = 0; _ < f; _++) {
 		sf_multiply(a, num, c);
@@ -21,6 +20,7 @@ int sf_factorial(Number * num, int f)
 			num->len--;
 		free(num->num);
 		num->num = c->num;
+		c->num = NULL;
 		sf_plus_one(a);
 	}
 
@@ -33,10 +33,10 @@ int sf_factorial(Number * num, int f)
 void sf_multiply(Number * a, Number * b, Number * out)
 {
 	int i, j;
-	uint8 cind, carry, n, k;
-	cind = 0;
-	carry = 0;
+	uint8 cind = 0, carry = 0, n, k;
 	out->len = a->len + b->len;
+	if (out->num != NULL)
+		free(out->num);
 	out->num = (uint8 *) sl_xmalloc(out->len * (sizeof(uint8)));
 	sf_fill_zero(out);
 
@@ -76,6 +76,18 @@ void sf_plus_one(Number * num)
 			return;
 		num->num[num->len - 1] = carry;
 	}
+}
+
+void sf_set_number(Number * num, char *n)
+{
+	int i;
+	if (num->num != NULL)
+		free(num->num);
+
+	num->len = strlen(n);
+	num->num = (uint8 *) sl_xmalloc(num->len * (sizeof(uint8)));
+	for (i = 0; i < num->len; i++)
+		num->num[i] = n[num->len - i - 1] - '0';
 }
 
 void sf_fill_zero(Number * num)

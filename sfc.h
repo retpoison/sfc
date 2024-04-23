@@ -18,6 +18,7 @@ int sf_calculate(Number * num, int f);
 int sf_factorial(Number * num, int f);
 void sf_multiply(Number * a, Number * b, Number * out);
 void sf_plus_one(Number * num);
+void sf_set_number(Number * num, char *n);
 void sf_fill_zero(Number * num);
 void sf_print(Number * num);
 void sf_cleanup(Number * num);
