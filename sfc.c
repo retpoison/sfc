@@ -1,4 +1,6 @@
 #include "sfc.h"
+#include <stdint.h>
+#include <math.h>
 
 Number *sf_new_number()
 {
@@ -21,7 +23,7 @@ int sf_factorial(Number * num, int f)
 		free(num->num);
 		num->num = c->num;
 		c->num = NULL;
-		sf_plus_one(a);
+		sf_sum(a, 1, 0);
 	}
 
 	free(a->num);
@@ -33,61 +35,65 @@ int sf_factorial(Number * num, int f)
 void sf_multiply(Number * a, Number * b, Number * out)
 {
 	int i, j;
-	uint8 cind = 0, carry = 0, n, k;
+	uint8_t cind = 0;
+	uint64_t n, carry = 0, k;
+
 	out->len = a->len + b->len;
 	if (out->num != NULL)
 		free(out->num);
-	out->num = (uint8 *) sl_xmalloc(out->len * (sizeof(uint8)));
+	out->num = (uint32_t *) sl_xmalloc(out->len * (sizeof(uint32_t)));
 	sf_fill_zero(out);
 
 	for (i = 0; i < a->len; i++) {
 		for (j = 0; j < b->len; j++) {
-			n = a->num[i] * b->num[j] + out->num[j + cind]
-			    + carry;
-			out->num[j + cind] = n % 10;
-			carry = (int)(n / 10);
+			n = (uint64_t) a->num[i] * b->num[j] +
+			    out->num[j + cind] + carry;
+			out->num[j + cind] = n % SF_MAX;
+			carry = n / SF_MAX;
 		}
 		for (k = j + cind; carry != 0; k++) {
 			n = out->num[k] + carry;
-			out->num[k] = n % 10;
-			carry = (uint8) (n / 10);
+			out->num[k] = n % SF_MAX;
+			carry = n / SF_MAX;
 		}
 		cind++;
 	}
 }
 
-void sf_plus_one(Number * num)
+void sf_sum(Number * num, int p, int ind)
 {
-	uint8 carry = 0, n;
-	int ind = 0;
+	uint8_t carry = 0;
+	uint32_t n;
 	do {
-		n = num->num[ind] + 1;
-		num->num[ind] = n % 10;
-		carry = n / 10;
+		n = num->num[ind] + p;
+		num->num[ind] = n % SF_MAX;
+		carry = n / SF_MAX;
 		ind++;
 	}
 	while (carry != 0 && ind < num->len);
 
 	if (ind == num->len && carry != 0) {
 		num->len++;
-		num->num =
-		    (uint8 *) sl_xrealloc(num->num, (num->len) * sizeof(uint8));
-		if (num->num == NULL)
-			return;
+		num->num = (uint32_t *)
+		    sl_xrealloc(num->num, (num->len) * sizeof(uint32_t));
 		num->num[num->len - 1] = carry;
 	}
 }
 
 void sf_set_number(Number * num, char *n)
 {
-	int i;
+	int i, len = strlen(n);
 	if (num->num != NULL)
 		free(num->num);
 
-	num->len = strlen(n);
-	num->num = (uint8 *) sl_xmalloc(num->len * (sizeof(uint8)));
-	for (i = 0; i < num->len; i++)
-		num->num[i] = n[num->len - i - 1] - '0';
+	num->len = len / SF_DIGIT + 1;
+	num->num = (uint32_t *) sl_xmalloc(num->len * (sizeof(uint32_t)));
+	sf_fill_zero(num);
+
+	for (i = 0; i < len; i++) {
+		sf_sum(num, (n[len - i - 1] - '0') * pow(10, i % SF_DIGIT),
+		       i / SF_DIGIT);
+	}
 }
 
 void sf_fill_zero(Number * num)
@@ -102,16 +108,17 @@ void sf_print(Number * num)
 	int i = num->len - 1;
 	if (num->num[i] == 0)
 		i--;
-
+	printf("%d", num->num[i--]);
 	for (; i >= 0; i--) {
-		printf("%d", num->num[i]);
+		printf("%09d", num->num[i]);
 	}
 	printf("\n");
 }
 
 void sf_cleanup(Number * num)
 {
-	free(num->num);
+	if (num->num != NULL)
+		free(num->num);
 	free(num);
 }
 
