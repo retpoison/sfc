@@ -8,6 +8,7 @@ int main()
 	sf_factorial(f, 1500);
 	sn_print(f);
 	sn_cleanup(f);
+	f = NULL;
 
 	Number *a = sn_new_number();
 	sn_set_number(a, "125");
@@ -18,7 +19,10 @@ int main()
 
 	sn_print(c);
 	sn_cleanup(a);
+	a = NULL;
 	sn_cleanup(b);
+	b = NULL;
 	sn_cleanup(c);
+	c = NULL;
 	return 0;
 }
