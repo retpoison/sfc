@@ -65,6 +65,35 @@ sn_sum(Number * num, int p, int ind)
 }
 
 void
+sn_nsum(Number * a, Number * b, Number * out)
+{
+	int i, s;
+	Number *bn;
+
+	if (a->len > b->len) {
+		bn = a;
+		s = b->len;
+		bn = a;
+	} else {
+		bn = b;
+		s = a->len;
+		bn = b;
+	}
+	out->len = ((a->len > b->len) ? a->len : b->len) + 1;
+	if (out->num != NULL)
+		free(out->num);
+	out->num = (uint32_t *) sl_xmalloc(out->len * (sizeof(uint32_t)));
+	sn_fill_zero(out);
+
+	for (i = 0; i < s; i++) {
+		sn_sum(out, a->num[i] + b->num[i], i);
+	}
+	for (; i < out->len - 1; i++) {
+		sn_sum(out, bn->num[i], i);
+	}
+}
+
+void
 sn_set_number(Number * num, char *n)
 {
 	int i, len = strlen(n);
