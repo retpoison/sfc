@@ -6,7 +6,8 @@
 
 #include "number.h"
 
-Number *sn_new_number(void)
+Number *
+sn_new_number(void)
 {
 	Number *n = (Number *) sl_xmalloc(sizeof(Number));
 	n->num = NULL;
@@ -14,7 +15,8 @@ Number *sn_new_number(void)
 	return n;
 }
 
-void sn_multiply(Number * a, Number * b, Number * out)
+void
+sn_multiply(Number * a, Number * b, Number * out)
 {
 	int i, j;
 	uint8_t cind = 0;
@@ -42,7 +44,8 @@ void sn_multiply(Number * a, Number * b, Number * out)
 	}
 }
 
-void sn_sum(Number * num, int p, int ind)
+void
+sn_sum(Number * num, int p, int ind)
 {
 	uint8_t carry = 0;
 	uint32_t n;
@@ -62,7 +65,8 @@ void sn_sum(Number * num, int p, int ind)
 	}
 }
 
-void sn_set_number(Number * num, char *n)
+void
+sn_set_number(Number * num, char *n)
 {
 	int i, len = strlen(n);
 	if (num->num != NULL)
@@ -78,14 +82,16 @@ void sn_set_number(Number * num, char *n)
 	}
 }
 
-void sn_fill_zero(Number * num)
+void
+sn_fill_zero(Number * num)
 {
 	int i;
 	for (i = 0; i < num->len; i++)
 		num->num[i] = 0;
 }
 
-void sn_print(Number * num)
+void
+sn_print(Number * num)
 {
 	int i = num->len - 1;
 	if (num->num[i] == 0)
@@ -97,7 +103,8 @@ void sn_print(Number * num)
 	printf("\n");
 }
 
-void sn_cleanup(Number * num)
+void
+sn_cleanup(Number * num)
 {
 	if (num->num != NULL)
 		free(num->num);
@@ -108,13 +115,15 @@ void sn_cleanup(Number * num)
  * from https://git.suckless.org/st/file/st.c.html
  * with a few changes.
  */
-void sl_die(const char *errstr, ...)
+void
+sl_die(const char *errstr, ...)
 {
 	fprintf(stderr, "%s", errstr);
 	exit(1);
 }
 
-void *sl_xmalloc(size_t len)
+void *
+sl_xmalloc(size_t len)
 {
 	void *p;
 	if ((p = malloc(len)) == NULL)
@@ -122,7 +131,8 @@ void *sl_xmalloc(size_t len)
 	return p;
 }
 
-void *sl_xrealloc(void *p, size_t len)
+void *
+sl_xrealloc(void *p, size_t len)
 {
 	if ((p = realloc(p, len)) == NULL)
 		sl_die("realloc: %s\n", strerror(errno));

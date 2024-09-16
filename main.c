@@ -2,7 +2,8 @@
 
 #include "sfc.h"
 
-int main()
+int
+main()
 {
 	Number *f = sn_new_number();
 	sf_factorial(f, 1500);

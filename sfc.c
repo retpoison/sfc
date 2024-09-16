@@ -2,7 +2,8 @@
 
 #include "sfc.h"
 
-int sf_factorial(Number * num, int f)
+int
+sf_factorial(Number * num, int f)
 {
 	Number *a = sn_new_number();
 	Number *c = sn_new_number();
