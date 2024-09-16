@@ -47,21 +47,20 @@ sn_multiply(Number * a, Number * b, Number * out)
 void
 sn_sum(Number * num, int p, int ind)
 {
-	uint8_t carry = 0;
 	uint32_t n;
 	do {
 		n = num->num[ind] + p;
 		num->num[ind] = n % SF_MAX;
-		carry = n / SF_MAX;
+		p = n / SF_MAX;
 		ind++;
 	}
-	while (carry != 0 && ind < num->len);
+	while (p != 0 && ind < num->len);
 
-	if (ind == num->len && carry != 0) {
+	if (ind == num->len && p != 0) {
 		num->len++;
 		num->num = (uint32_t *)
 		    sl_xrealloc(num->num, (num->len) * sizeof(uint32_t));
-		num->num[num->len - 1] = carry;
+		num->num[num->len - 1] = p;
 	}
 }
 
