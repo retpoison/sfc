@@ -23,10 +23,7 @@ sn_multiply(Number * a, Number * b, Number * out)
 	uint64_t n, carry = 0, k;
 
 	out->len = a->len + b->len;
-	if (out->num != NULL)
-		free(out->num);
-	out->num = (uint32_t *) sl_xmalloc(out->len * (sizeof(uint32_t)));
-	sn_fill_zero(out);
+	sn_allocate_number(out);
 
 	for (i = 0; i < a->len; i++) {
 		for (j = 0; j < b->len; j++) {
@@ -80,10 +77,7 @@ sn_nsum(Number * a, Number * b, Number * out)
 		bn = b;
 	}
 	out->len = ((a->len > b->len) ? a->len : b->len) + 1;
-	if (out->num != NULL)
-		free(out->num);
-	out->num = (uint32_t *) sl_xmalloc(out->len * (sizeof(uint32_t)));
-	sn_fill_zero(out);
+	sn_allocate_number(out);
 
 	for (i = 0; i < s; i++) {
 		sn_sum(out, a->num[i] + b->num[i], i);
@@ -97,17 +91,23 @@ void
 sn_set_number(Number * num, char *n)
 {
 	int i, len = strlen(n);
-	if (num->num != NULL)
-		free(num->num);
 
 	num->len = len / SF_DIGIT + 1;
-	num->num = (uint32_t *) sl_xmalloc(num->len * (sizeof(uint32_t)));
-	sn_fill_zero(num);
+	sn_allocate_number(num);
 
 	for (i = 0; i < len; i++) {
 		sn_sum(num, (n[len - i - 1] - '0') * pow(10, i % SF_DIGIT),
 		       i / SF_DIGIT);
 	}
+}
+
+void
+sn_allocate_number(Number * num)
+{
+	if (num->num != NULL)
+		free(num->num);
+	num->num = (uint32_t *) sl_xmalloc(num->len * (sizeof(uint32_t)));
+	sn_fill_zero(num);
 }
 
 void
