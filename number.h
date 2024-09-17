@@ -13,9 +13,10 @@ typedef struct {
 } Number;
 
 Number *sn_new_number(void);
-void sn_multiply(Number * a, Number * b, Number * out);
 void sn_sum(Number * num, int p, int ind);
 void sn_nsum(Number * a, Number * b, Number * out);
+void sn_multiply(Number * num, int p1, int p2, int ind);
+void sn_nmultiply(Number * a, Number * b, Number * out);
 void sn_set_number(Number * num, char *n);
 void sn_allocate_number(Number * num);
 void sn_fill_zero(Number * num);

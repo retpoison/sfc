@@ -16,26 +16,33 @@ sn_new_number(void)
 }
 
 void
-sn_multiply(Number * a, Number * b, Number * out)
+sn_multiply(Number * num, int p1, int p2, int ind)
+{
+	int i;
+	uint64_t n, carry = 0;
+
+	n = (uint64_t) p1 *p2 + num->num[ind];
+	num->num[ind] = n % SF_MAX;
+	carry = n / SF_MAX;
+	for (i = ind + 1; carry != 0; i++) {
+		n = num->num[i] + carry;
+		num->num[i] = n % SF_MAX;
+		carry = n / SF_MAX;
+	}
+}
+
+void
+sn_nmultiply(Number * a, Number * b, Number * out)
 {
 	int i, j;
-	uint8_t cind = 0;
-	uint64_t n, carry = 0, k;
+	uint64_t cind = 0;
 
 	out->len = a->len + b->len;
 	sn_allocate_number(out);
 
 	for (i = 0; i < a->len; i++) {
 		for (j = 0; j < b->len; j++) {
-			n = (uint64_t) a->num[i] * b->num[j] +
-			    out->num[j + cind] + carry;
-			out->num[j + cind] = n % SF_MAX;
-			carry = n / SF_MAX;
-		}
-		for (k = j + cind; carry != 0; k++) {
-			n = out->num[k] + carry;
-			out->num[k] = n % SF_MAX;
-			carry = n / SF_MAX;
+			sn_multiply(out, a->num[i], b->num[j], j + cind);
 		}
 		cind++;
 	}

@@ -16,7 +16,7 @@ main()
 	Number *b = sn_new_number();
 	sn_set_number(b, "951");
 	Number *c = sn_new_number();
-	sn_multiply(a, b, c);
+	sn_nmultiply(a, b, c);
 
 	sn_print(c);
 	sn_cleanup(a);
