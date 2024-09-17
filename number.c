@@ -122,7 +122,7 @@ void
 sn_print(Number * num)
 {
 	int i = num->len - 1;
-	if (num->num[i] == 0)
+	while (num->num[i] == 0)
 		i--;
 	printf("%d", num->num[i--]);
 	for (; i >= 0; i--) {
