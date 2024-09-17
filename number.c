@@ -18,17 +18,17 @@ sn_new_number(void)
 void
 sn_multiply(Number * num, int p1, int p2, int ind)
 {
-	int i;
-	uint64_t n, carry = 0;
+	uint64_t n = (uint64_t) p1 * p2, carry = 0;
 
-	n = (uint64_t) p1 *p2 + num->num[ind];
-	num->num[ind] = n % SF_MAX;
-	carry = n / SF_MAX;
-	for (i = ind + 1; carry != 0; i++) {
-		n = num->num[i] + carry;
-		num->num[i] = n % SF_MAX;
+	do {
+		n += num->num[ind] + carry;
+		num->num[ind] = n % SF_MAX;
 		carry = n / SF_MAX;
-	}
+		ind++;
+		n = 0;
+	} while (carry != 0 && ind < num->len);
+
+	sn_check_carry(num, carry, ind);
 }
 
 void
@@ -60,12 +60,7 @@ sn_sum(Number * num, int p, int ind)
 	}
 	while (p != 0 && ind < num->len);
 
-	if (ind == num->len && p != 0) {
-		num->len++;
-		num->num = (uint32_t *)
-		    sl_xrealloc(num->num, (num->len) * sizeof(uint32_t));
-		num->num[num->len - 1] = p;
-	}
+	sn_check_carry(num, p, ind);
 }
 
 void
@@ -144,6 +139,17 @@ sn_cleanup(Number * num)
 	if (num->num != NULL)
 		free(num->num);
 	free(num);
+}
+
+void
+sn_check_carry(Number * num, uint64_t carry, int ind)
+{
+	if (ind == num->len && carry != 0) {
+		num->len++;
+		num->num = (uint32_t *)
+		    sl_xrealloc(num->num, (num->len) * sizeof(uint32_t));
+		num->num[num->len - 1] = carry;
+	}
 }
 
 /*

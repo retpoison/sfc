@@ -22,6 +22,7 @@ void sn_allocate_number(Number * num);
 void sn_fill_zero(Number * num);
 void sn_print(Number * num);
 void sn_cleanup(Number * num);
+void sn_check_carry(Number * num, uint64_t carry, int ind);
 
 void *sl_xmalloc(size_t len);
 void *sl_xrealloc(void *p, size_t len);
