@@ -1,17 +1,14 @@
-cc=gcc
+CC=gcc
+CFLAGS=-std=c99 -pedantic -Wall -Wextra -Wno-unused-parameter -O2
+LDFLAGS= -lm
+all: sfc
 
-sfc: main.o sfc.o number.o
-	$(cc) main.o sfc.o number.o -o sfc -lm
+%.o: %.c
+	$(CC) $(CFLAGS) -c $^
 
-main.o: main.c
-	$(cc) -c main.c
-
-sfc.o: sfc.c sfc.h
-	$(cc) -c sfc.c
-
-number.o: number.c number.h
-	$(cc) -c number.c 
+sfc: number.o sfc.o
+	$(CC) $(CFLAGS) main.c -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm sfc *.o
+	rm -vf sfc *.o 
 
