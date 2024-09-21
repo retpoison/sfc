@@ -121,7 +121,7 @@ sn_fill_zero(Number * num)
 }
 
 void
-sn_print(Number * num)
+sn_print(Number * num, char c)
 {
 	int i = num->len - 1;
 	while (num->num[i] == 0)
@@ -130,7 +130,7 @@ sn_print(Number * num)
 	for (; i >= 0; i--) {
 		printf("%09d", num->num[i]);
 	}
-	printf("\n");
+	printf("%c", c);
 }
 
 void

@@ -20,7 +20,7 @@ void sn_nmultiply(Number * a, Number * b, Number * out);
 void sn_set_number(Number * num, char *n);
 void sn_allocate_number(Number * num);
 void sn_fill_zero(Number * num);
-void sn_print(Number * num);
+void sn_print(Number * num, char c);
 void sn_cleanup(Number * num);
 void sn_check_carry(Number * num, uint64_t carry, int ind);
 
